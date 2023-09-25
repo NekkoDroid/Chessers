@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -63,6 +65,15 @@ public class BoardManager : MonoBehaviour
     [Header("Events")]
     public UnityEvent OnGameStarted;
     public UnityEvent OnGameStopped;
+
+    public void ToggleToolTips()
+    {
+        foreach (var piece in _pieces ?? Array.Empty<GameObject>())
+        {
+            var tooltip = piece.GetComponent<ToolTipSpawner>();
+            tooltip.enabled = !tooltip.enabled;
+        }
+    }
 
     public void RequestQuit()
     {
@@ -162,9 +173,14 @@ public class BoardManager : MonoBehaviour
         return locations.Select(location => SpawnPiece(location, piece, color));
     }
 
+    private readonly FieldInfo ToolTipSpawnerName = typeof(ToolTipSpawner).GetField("toolTipText", BindingFlags.Instance | BindingFlags.NonPublic);
+
     private GameObject SpawnPiece(Transform location, Mesh piece, Material color)
     {
         var instance = Instantiate(Piece);
+
+        var spawner = instance.GetComponent<ToolTipSpawner>();
+        ToolTipSpawnerName.SetValue(spawner, $"{color.name} {piece.name}");
 
         instance.GetComponent<MeshFilter>().sharedMesh = piece;
         instance.GetComponent<MeshRenderer>().sharedMaterial = color;
