@@ -173,7 +173,8 @@ public class BoardManager : MonoBehaviour
         return locations.Select(location => SpawnPiece(location, piece, color));
     }
 
-    private readonly FieldInfo ToolTipSpawnerName = typeof(ToolTipSpawner).GetField("toolTipText", BindingFlags.Instance | BindingFlags.NonPublic);
+    private readonly FieldInfo ToolTipSpawnerName = typeof(ToolTipSpawner)
+        .GetField("toolTipText", BindingFlags.Instance | BindingFlags.NonPublic);
 
     private GameObject SpawnPiece(Transform location, Mesh piece, Material color)
     {

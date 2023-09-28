@@ -13,6 +13,11 @@ public class PieceManager : MonoBehaviour
     public BoardManager Board;
     public GameObject Arrow;
 
+    private void Awake()
+    {
+        Arrow.transform.SetParent(null, false);
+    }
+
     private void OnDestroy()
     {
         Destroy(Arrow);
